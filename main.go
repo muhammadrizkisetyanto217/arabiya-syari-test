@@ -1,13 +1,26 @@
 package main
 
 import (
+	"arabiya-syari/internals/database"
 	"arabiya-syari/internals/handlers/memberships"
+	"log"
+
 	// "net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+
 func main() {
+
+    // Koneksi ke database
+    db, err := database.ConnectDB()
+    if err != nil {
+        log.Fatalf("Error koneksi database: %v", err)
+    }
+
+
+
 	r := gin.Default()
     //* Sama seperti 
     // r := gin.New()
@@ -22,8 +35,10 @@ func main() {
     // Sebagai gantinya, server akan mengembalikan respons HTTP 500.
 
 
+
+
 	//? Inisialisasi handler memberships
-	membershipHandler := memberships.NewHandler(r)
+	membershipHandler := memberships.NewHandler(r,db)
 
 	//? Registrasi route
 	membershipHandler.RegisterRoutes()

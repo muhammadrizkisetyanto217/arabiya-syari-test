@@ -1,13 +1,16 @@
 package memberships
 
-import "github.com/gin-gonic/gin"
-
+import (
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
 
 //? Handler adalah struct yang meng-embed *gin.Engine.
 //* Artinya, Handler memiliki semua metode dari gin.Engine seperti GET, POST, Group, dll.
 // Dengan menggunakan *gin.Engine, Handler dapat langsung mengakses instance router Gin
 type Handler struct {
 	*gin.Engine
+	db *gorm.DB
 }
 
 //? Fungsi ini menerima *gin.Engine sebagai parameter dan mengembalikannya dalam *Handler.
@@ -16,11 +19,11 @@ type Handler struct {
 
 
 //? api adalah parameter fungsi di NewHandler(api *gin.Engine), yang berarti api adalah variabel bertipe pointer ke gin.Engine
-func NewHandler(api *gin.Engine) *Handler {
+func NewHandler(api *gin.Engine, db *gorm.DB) *Handler {
 	// Bagian ini adalah cara untuk membuat dan mengembalikan pointer ke struct Handler.
 	// Ini mengembalikan alamat memori dari struct Handler, jadi kita bisa menggunakannya tanpa membuat salinan baru.
 	// Artinya kita membuat struct Handler baru dan mengisi field Engine dengan nilai api, yang berasal dari parameter.
-	return &Handler{Engine: api}
+	return &Handler{Engine: api, db: db}
 }
  
 
