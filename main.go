@@ -2,26 +2,35 @@ package main
 
 import (
 	"arabiya-syari/internals/database"
-	"arabiya-syari/internals/handlers/memberships"
+	"arabiya-syari/internals/routes"
+	"os"
+
+	// "arabiya-syari/internals/handlers/memberships"
+
+	// "fmt"
 	"log"
 
 	// "net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	// "gorm.io/gorm"
 )
 
 
 func main() {
 
     // Koneksi ke database
-    db, err := database.ConnectDB()
-    if err != nil {
-        log.Fatalf("Error koneksi database: %v", err)
-    }
+   // Load .env
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found")
+	}
+
+	database.ConnectDatabase()
 
 
 
-	r := gin.Default()
+	// r := gin.Default()
     //* Sama seperti 
     // r := gin.New()
     // r.Use(gin.Logger())
@@ -35,13 +44,28 @@ func main() {
     // Sebagai gantinya, server akan mengembalikan respons HTTP 500.
 
 
+    // r := routes.SetupRouter()
+	// Buat instance Gin dengan `gin.Default()`
+	r := gin.Default()
+
+	// Register routes
+	routes.SetupRouter(r)
+
+	// Set port default
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	// Run server
+	r.Run(":" + port)
 
 
 	//? Inisialisasi handler memberships
-	membershipHandler := memberships.NewHandler(r,db)
+	// membershipHandler := memberships.NewHandler(r)
 
-	//? Registrasi route
-	membershipHandler.RegisterRoutes()
+	// //? Registrasi route
+	// membershipHandler.RegisterRoutes()
 
     //* Cara sekali pakai
     // memberships.NewHandler(r).RegisterRoutes();
