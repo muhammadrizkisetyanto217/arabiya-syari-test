@@ -1,7 +1,9 @@
 package models
 
 import (
+	"encoding/json"
 	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -14,11 +16,17 @@ type Subcategory struct {
 	GreatTotalThemesOrLevels      int            `json:"great_total_themes_or_levels"`
 	TotalThemesOrLevels           int            `json:"total_themes_or_levels"`
 	CompletedTotalThemesOrLevels  int            `json:"completed_total_themes_or_levels"`
-	UpdateNews                    string         `gorm:"type:jsonb" json:"update_news"`
+	UpdateNews                    json.RawMessage       `gorm:"type:jsonb" json:"update_news"`
 	ImageURL                      string         `gorm:"type:varchar(100)" json:"image_url"`
 	CreatedAt                     time.Time      `json:"created_at"`
 	UpdatedAt                     time.Time      `json:"updated_at"`
 	DeletedAt                     gorm.DeletedAt `gorm:"index" json:"deleted_at"`
-	CategoryID                    uint           `gorm:"not null" json:"category_id"` // Foreign key
-	Category                      Category       `gorm:"foreignKey:CategoryID"`      // Relasi ke Category
+	CategoryID uint `gorm:"column:categories_id;not null" json:"categories_id"`
+
+}
+
+
+func (d *Subcategory) BeforeCreate(tx *gorm.DB) error {
+	d.CreatedAt = time.Now()
+	return nil
 }

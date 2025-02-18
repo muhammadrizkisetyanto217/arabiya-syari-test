@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"arabiya-syari/internals/database"
@@ -11,7 +12,20 @@ import (
 
 type SubcategoryController struct{}
 
+
+
 // Create Subcategory
+// func (sc *SubcategoryController) CreateSubcategory(c *gin.Context) {
+// 	var subcategory models.Subcategory
+
+// 	if err := c.ShouldBindJSON(&subcategory); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	database.DB.Create(&subcategory)
+// 	c.JSON(http.StatusCreated, gin.H{"message": "Subcategory created", "data": subcategory})
+// }
 func (sc *SubcategoryController) CreateSubcategory(c *gin.Context) {
 	var subcategory models.Subcategory
 
@@ -20,9 +34,20 @@ func (sc *SubcategoryController) CreateSubcategory(c *gin.Context) {
 		return
 	}
 
-	database.DB.Create(&subcategory)
+	// Debugging: Lihat data yang dikirim sebelum insert
+	log.Printf("Data yang diterima: %+v\n", subcategory)
+
+	if err := database.DB.Create(&subcategory).Error; err != nil {
+		log.Printf("Error inserting data: %v\n", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert data"})
+		return
+	}
+
+	log.Println("Data berhasil disimpan!")
 	c.JSON(http.StatusCreated, gin.H{"message": "Subcategory created", "data": subcategory})
 }
+
+
 
 // Get All Subcategories
 func (sc *SubcategoryController) GetSubcategories(c *gin.Context) {
@@ -84,6 +109,19 @@ func (sc *SubcategoryController) GetSubcategoriesByCategory(c *gin.Context) {
 	var subcategories []models.Subcategory
 
 	if err := database.DB.Where("category_id = ?", categoryID).Find(&subcategories).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": subcategories})
+}
+
+
+func (sc *SubcategoryController) GetSubCategoriesByCategory(c *gin.Context) {
+	categoryID := c.Param("id")
+	var subcategories []models.Subcategory
+
+	if err := database.DB.Where("categories_id = ?", categoryID).Find(&subcategories).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
