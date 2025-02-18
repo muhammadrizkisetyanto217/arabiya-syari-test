@@ -1,24 +1,38 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"arabiya-syari/internals/controllers"
-	// "arabiya-syari/internals/middlewares"
+
+	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(r *gin.Engine) {
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 
+	// Instance Controller
+	categoryController := controllers.CategoryController{}
 
-		// Routes
-	api := r.Group("/api/difficulties")
+	// Routes for Difficulties
+	apiDifficulties := r.Group("/api/difficulties")
 	{
-		api.POST("/", controllers.CreateDifficulty)
-		api.GET("/", controllers.GetDifficulties)
-		api.GET("/:id", controllers.GetDifficultyByID)
-		api.PUT("/:id", controllers.UpdateDifficulty)
-		api.DELETE("/:id", controllers.DeleteDifficulty)
+		apiDifficulties.POST("/", controllers.CreateDifficulty)
+		apiDifficulties.GET("/", controllers.GetDifficulties)
+		apiDifficulties.GET("/:id", controllers.GetDifficultyByID)
+		apiDifficulties.PUT("/:id", controllers.UpdateDifficulty)
+		apiDifficulties.DELETE("/:id", controllers.DeleteDifficulty)
 	}
+
+	// Routes for Categories
+	apiCategories := r.Group("/api/categories")
+	{
+		apiCategories.POST("/", categoryController.CreateCategory)
+		apiCategories.GET("/", categoryController.GetCategories)
+		apiCategories.GET("/:id", categoryController.GetCategory)
+		apiCategories.PUT("/:id", categoryController.UpdateCategory)
+		apiCategories.DELETE("/:id", categoryController.DeleteCategory)
+	}
+
+	// Get Categories by Difficulty
+	r.GET("/api/difficulties/:id/categories", categoryController.GetCategoriesByDifficulty)
 }

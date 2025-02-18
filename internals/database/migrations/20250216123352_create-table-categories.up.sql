@@ -6,5 +6,7 @@ CREATE TABLE categories (
     total_categories INT,
     status VARCHAR(10) CHECK (status IN ('active', 'pending', 'archived')) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP,
+    difficulty_id INT REFERENCES difficulties(id)
 )
+
