@@ -51,6 +51,9 @@ func main() {
 	// Register routes
 	routes.SetupRouter(r)
 
+    // Category routes
+    routes.CategoryRouter(r)
+
 	// Set port default
 	port := os.Getenv("PORT")
 	if port == "" {
