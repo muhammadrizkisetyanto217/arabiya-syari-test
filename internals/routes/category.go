@@ -41,4 +41,19 @@ func CategoryRouter(r *gin.Engine) {
 
 	// Get Categories by Difficulty
 	r.GET("/api/difficulties/:id/categories", categoryController.GetCategoriesByDifficulty)
+
+
+		// Instance Controller
+	subcategoryController := controllers.SubcategoryController{}
+
+
+		// Subcategory routes
+	subcategoryGroup := r.Group("/subcategories")
+	{
+		subcategoryGroup.GET("/", subcategoryController.GetSubcategories)
+		subcategoryGroup.GET("/:id", subcategoryController.GetSubcategory)
+		subcategoryGroup.POST("/", subcategoryController.CreateSubcategory)
+		subcategoryGroup.PUT("/:id", subcategoryController.UpdateSubcategory)
+		subcategoryGroup.DELETE("/:id", subcategoryController.DeleteSubcategory)
+	}
 }
