@@ -15,8 +15,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	// "gorm.io/gorm"
-
-    "github.com/gin-contrib/cors"
 )
 
 
@@ -50,8 +48,19 @@ func main() {
 	// Buat instance Gin dengan `gin.Default()`
 	r := gin.Default()
 
-	// Tambahkan middleware CORS di level global
-	r.Use(cors.Default())
+    r.Use(func(c *gin.Context) {
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+        // Handle preflight request
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
+
+        c.Next()
+    })
 
 	// Register routes
 	routes.SetupRouter(r)
