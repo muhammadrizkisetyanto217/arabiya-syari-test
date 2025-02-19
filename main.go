@@ -12,8 +12,6 @@ import (
 
 	// "net/http"
 
-    "github.com/gin-contrib/cors"
-    
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	// "gorm.io/gorm"
@@ -50,31 +48,36 @@ func main() {
 	// Buat instance Gin dengan `gin.Default()`
 	r := gin.Default()
 
-    // r.Use(func(c *gin.Context) {
-    //     c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-    //     c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-    //     c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+    r.Use(func(c *gin.Context) {
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-    //     // Handle preflight request
-    //     if c.Request.Method == "OPTIONS" {
-    //         c.AbortWithStatus(204)
-    //         return
-    //     }
+        // Handle preflight request
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
 
-    //     c.Next()
-    // })
-
-        // Gunakan middleware CORS dari gin-contrib
-    r.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"*"},
-        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-        AllowHeaders:     []string{"Content-Type", "Authorization"},
-        ExposeHeaders:    []string{"Content-Length"},
-        AllowCredentials: true,
-    }))
+        c.Next()
+    })
 
 	// Register routes
 	routes.SetupRouter(r)
+
+        r.Use(func(c *gin.Context) {
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+        // Handle preflight request
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
+
+        c.Next()
+    })
 
     // Category routes
     routes.CategoryRouter(r)
