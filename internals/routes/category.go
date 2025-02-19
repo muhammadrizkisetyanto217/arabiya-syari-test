@@ -58,6 +58,7 @@ func CategoryRouter(r *gin.Engine) {
 	}
 
 
-	r.GET("/api/categories/:id/subcategories", subcategoryController.GetSubCategoriesByCategory)
+	r.GET("/api/categories/:id/subcategories", subcategoryController.GetSubcategoriesByCategory)
+	
 
 }
