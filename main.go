@@ -52,15 +52,47 @@ func main() {
 	// Buat instance Gin dengan `gin.Default()`
 	r := gin.Default()
 
-  		// Konfigurasi CORS
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"}, // Ganti dengan domain yang diperbolehkan
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
+    // Konfigurasi CORS
+    config := cors.Config{
+        // Izinkan domain Vercel dan localhost untuk development
+        AllowOrigins: []string{
+            "https://quizz-vffc.vercel.app",    // Production URL
+            "http://localhost:3000",             // Development URL
+        },
+        
+        // Method yang diizinkan
+        AllowMethods: []string{
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS",
+        },
+        
+        // Header yang diizinkan
+        AllowHeaders: []string{
+            "Origin",
+            "Content-Type",
+            "Content-Length",
+            "Accept-Encoding",
+            "X-CSRF-Token",
+            "Authorization",
+        },
+        
+        // Izinkan credentials seperti cookies jika diperlukan
+        AllowCredentials: true,
+        
+        // Cache preflight request
+        MaxAge: 12 * time.Hour,
+
+        // Izinkan expose headers tertentu ke frontend jika diperlukan
+        ExposeHeaders: []string{"Content-Length"},
+    }
+
+    // Gunakan middleware CORS
+    r.Use(cors.New(config))
 
 	// Register routes
 	routes.SetupRouter(r)
