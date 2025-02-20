@@ -47,7 +47,6 @@ func SetupRouter(r *gin.Engine) {
 	// Instance Controller
 	subcategoryController := controllers.SubcategoryController{}
 
-
 	// Subcategory routes
 	apisubcategoryGroup := r.Group("/api/subcategories")
 	apisubcategoryGroup.Use(middlewares.AuthMiddleware())
@@ -63,4 +62,15 @@ func SetupRouter(r *gin.Engine) {
 	r.GET("/api/categories/:id/subcategories", subcategoryController.GetSubcategoriesByCategory)
 	
 
+
+	themeOrLevelController := controllers.ThemeOrLevelController{}
+	apiThemeOrLevelGroup := r.Group("/api/themes-or-levels")
+	apiThemeOrLevelGroup.Use(middlewares.AuthMiddleware())
+	{
+		apiThemeOrLevelGroup.GET("/", themeOrLevelController.GetThemesOrLevels)
+		apiThemeOrLevelGroup.GET("/:id", themeOrLevelController.GetThemeOrLevel)
+		apiThemeOrLevelGroup.POST("/", themeOrLevelController.CreateThemeOrLevel)
+		apiThemeOrLevelGroup.PUT("/:id", themeOrLevelController.UpdateThemeOrLevel)
+		apiThemeOrLevelGroup.DELETE("/:id", themeOrLevelController.DeleteThemeOrLevel)
+	}
 }

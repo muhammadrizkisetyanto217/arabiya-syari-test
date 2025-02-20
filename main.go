@@ -49,7 +49,7 @@ func main() {
 	// Buat instance Gin dengan `gin.Default()`
 	r := gin.Default()
 
-   r.Use(middlewares.CORSMiddleware())
+  	r.Use(middlewares.CORSMiddleware())
 
 	// Register routes
 	routes.SetupRouter(r)

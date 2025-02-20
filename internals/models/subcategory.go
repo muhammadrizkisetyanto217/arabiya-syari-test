@@ -22,7 +22,6 @@ type Subcategory struct {
 	UpdatedAt                     time.Time      `json:"updated_at"`
 	DeletedAt                     gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	CategoryID uint `gorm:"column:categories_id;not null" json:"categories_id"`
-
 }
 
 
