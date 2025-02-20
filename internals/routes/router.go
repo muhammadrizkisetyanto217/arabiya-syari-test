@@ -65,7 +65,7 @@ func SetupRouter(r *gin.Engine) {
 
 	themeOrLevelController := controllers.ThemeOrLevelController{}
 	apiThemeOrLevelGroup := r.Group("/api/themes-or-levels")
-	apiThemeOrLevelGroup.Use(middlewares.AuthMiddleware())
+	// apiThemeOrLevelGroup.Use(middlewares.AuthMiddleware())
 	{
 		apiThemeOrLevelGroup.GET("/", themeOrLevelController.GetThemesOrLevels)
 		apiThemeOrLevelGroup.GET("/:id", themeOrLevelController.GetThemeOrLevel)

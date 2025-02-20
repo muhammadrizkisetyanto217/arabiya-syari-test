@@ -3,9 +3,12 @@ package main
 import (
 	"arabiya-syari/internals/database"
 	"arabiya-syari/internals/routes"
-    "arabiya-syari/internals/middlewares"
+	"time"
+
+	// "arabiya-syari/internals/middlewares"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	// "arabiya-syari/internals/handlers/memberships"
 
 	// "fmt"
@@ -49,7 +52,15 @@ func main() {
 	// Buat instance Gin dengan `gin.Default()`
 	r := gin.Default()
 
-  	r.Use(middlewares.CORSMiddleware())
+  		// Konfigurasi CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, // Ganti dengan domain yang diperbolehkan
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// Register routes
 	routes.SetupRouter(r)
